@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block title %}情节分组:{{ keyword }} {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/search.css">
+    <!--link rel='stylesheet' href='/stylesheets/bootstrap/css/bootstrap.min.css'-->
+    <script src="/javascript/jquery-2.2.2.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/javascript/comm.js"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "./modules/header.html" %}
+    <div class="content">
+        {% if not is_null_content %} 
+           <ul class="scenarios-group-list">
+              {% for group in group_list %}
+                 <li>
+                    <div class="scenarios-group-detail">
+                       <div class="scenarios-content">
+                          <div class="vcenter">
+                              <ul class="scenario-list">
+                                  {% for scenario in group.scenarios %}
+                                     <li id="101"><button class="scenario" disabled>{{ scenario }}</button></li>
+                                  {% endfor %} 
+                              </ul>
+                          </div>
+                       </div>
+                       <div class="docs-info" id="1001">
+                          <span>
+                              <a href="docs?q={{ crime  }}&d1={{ group.data1 }}&d2={{ group.data2 }}" class="docs-link">{{ group.doc_count }} 个文档</a>
+                              <input type="button" class="detail" value="●●●">
+                          </span>
+                       </div>
+                    </div>
+                 </li>
+               {% endfor %}
+           </ul>
+           
+           <div class="paginate-container">
+              <div class="pagination">
+                 {% autoescape false %}{{ paginator_html }}{% endautoescape %}
+              </div>
+           </div>
+        {% endif %}
+
+    </div>
+    {% include "./modules/footer.html" %}
+{% endblock %}

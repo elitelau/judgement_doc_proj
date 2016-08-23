@@ -1,0 +1,189 @@
+/* 
+ *  debug switch
+ */ 
+@debug-switch-on: false;
+
+/*
+ * font sizes
+ */
+@inp-index-font-size: 16px;
+@submit-index-font-size: 13px;
+@footer-font-size: 12px;
+@scenario-tag-font-size: 12px;
+@scenario-group-desc-font-size: 13px;
+
+@icon-font-path: ~'./bootstrap/fonts/';
+@icon-font-name: glyphicons-halflings-regular;
+@icon-font-svg-id: glyphicons_halflingsregular;
+/*
+ * various margins
+ */
+@search-left-margin: 80px;
+@footer-right-margin: 170px;
+@footer-bottom-margin: 10px;
+@index-form-top-margin: 30px;
+@index-form-bottom-margin: 140px; 
+
+/*
+ * colors
+ */
+@btn-color: #3388FF;
+@btn-focus-color: #317EF2;
+@input-border-focus-color: #4D90FE;
+@input-border-color: #9a9a9a; 
+@scenario-tag-color: #f1f1f1;
+@scenario-tag-focus-color: #3388ff;
+
+/*
+ * width, height
+ */
+@inp-search-index-width: 549px;
+@btn-submit-index-width: 120px;
+@search-index-height: 40px;
+@btn-submit-result-width: 49px;
+@img-index-width: 173px;
+@img-index-height: 173px;
+@result-header-height: 73px;
+
+/*
+ * borders, padding
+ */
+@default-border-width: 1px;
+@default-ctrl-border-width: 1px;
+
+/*****************************************************\
+ *   button
+\*****************************************************/
+
+.unified-btn-style {
+    text-align: center;
+    background-color: @btn-color;
+    border: none;
+    color: white;
+}
+
+.unified-btn-focus-style {
+    background-color: @btn-focus-color;
+}
+
+.btn-query-style(@width, @height, @font-size) {
+    width: @width;
+    height: @height;
+    font-size: @font-size;
+    font-weight: bold;
+    border-radius: 0px 2px 2px 0px; 
+    z-index: 1;
+}
+
+.btn-transparent-style {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.button-as-tag(@normal-bg-color, @focus-font-color, @font-size) {
+   border: none;
+   display: inline-block;
+   padding: 2px 3px 2px 3px;
+   border-radius: 2px;
+   background-color: @normal-bg-color;
+   font-size: @font-size;
+   text-decoration: none;
+   cursor: default;
+   &:hover, &:focus, &:active, &:hover:disabled {
+      background-color: @scenario-tag-focus-color;
+      color: white;
+      border: none;
+   }
+
+   &:disabled {
+      color: black;
+   }
+}
+
+
+/*****************************************************\
+ *   input
+\*****************************************************/
+/* query string input box: occurs on index*/
+.inp-query-index {
+    width: @inp-search-index-width;
+    padding: 1px 0px 1px 0px;
+    height: @search-index-height - 4px;
+    font-size: @inp-index-font-size;
+    margin-right: -1px;
+    border-radius: 2px 0px 0px 2px;
+}
+
+/*****************************************************\
+ *   css created block
+\*****************************************************/
+.add_block(@selector, @pre: ~'', @width: 1px, @height: 0px, @post:~':before', @clear: ~'none') {
+   @{pre}@{selector}@{post} {
+      content: "\0020";
+      display: block;
+      width: @width; 
+      height: @height;
+      clear: @clear;
+   }
+}
+
+.add_block_before(@selector, @pre, @width: 1px, @height: 1px) {
+    .add_block(@selector, @pre, @width, @height, ~':before');
+}
+
+.add_block_after(@selector, @pre, @width: 1px, @height: 1px) {
+    .add_block(@selector, @pre, @width, @height, ~':after');
+}
+
+/*****************************************************\
+ *   hidden for clear both
+\*****************************************************/
+
+/*
+ * problem: http://www.ruanyifeng.com/blog/2009/04/float_clearing.html
+ */
+.float_clear(@selector, @pre: ~'', @post: ~':after') {
+   .add_block(@selector, @pre, 1px, 0px, @post, both);
+}
+
+/*****************************************************\
+ *   hidden for clear both
+\*****************************************************/
+.show_border(@switch, @style: dotted, @color:red) when(@switch) {
+   border: 1px @style @color;
+}
+
+/*****************************************************\
+ *   reset
+\*****************************************************/
+
+/*
+ *  http://stackoverflow.com/questions/6726135
+ *  problem: Exact same height and alignment of button and input text box
+ *           because of text input is victim of 'box model'
+ *  see: http://stackoverflow.com/questions/2125509/how-do-i-set-the-size-of-an-html-text-box
+ */
+input[type="text"] {
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    padding: 1px 0px 1px 0px;
+    border: 1px solid @input-border-color;
+    outline: none;
+    box-shadow: none;
+}
+
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, a, img, strong, i, 
+form, fieldset, label, legend, table, tbody, tfoot, thead, tr, th, td,
+ol, ul, li, nav {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}

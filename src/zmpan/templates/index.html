@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}怎么判，刑事判罚分析{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="text/javascript" src="/javascript/jquery-2.2.2.min.js"></script>
+    <script type="text/javascript" src="/javascript/comm.js"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div class="wrapper">
+        <div class="content">
+            <div class="img-wrapper">
+                <img src="/images/svglogo.svg" class="logo logo-index"/>
+            </div>
+            <form id="search" action="search" onsubmit="return validateForm()" method="post">
+               <fieldset>
+                  <div class="query-wrapper">
+                      <div class="item item-query">
+                          <input type="text" class="input input-index" id="form_query_string" name="query_string" placeholder="故意伤害罪"/>
+                      </div>
+                      <div class="item item-submit">
+                          <input type="submit" class="query-btn query-btn-index" name="submit" value="搜索"/>
+                      </div>
+                  </div>
+               </fieldset>
+            </form>
+        </div>
+    </div>
+    <div id="footer">
+       <span class="fright">
+         <a href="about#question">问题</a>  |  <a href="about#progress">进展说明</a>  |  <a href="about#aboutus">关于我们</a>
+       </span>
+    </div>
+
+{% endblock %}

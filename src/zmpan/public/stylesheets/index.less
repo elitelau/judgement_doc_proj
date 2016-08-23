@@ -1,0 +1,87 @@
+@import "unistyle.less";
+
+#footer {
+  position:absolute;
+  bottom:0;
+  right:0;
+  width:100%;
+  height: @footer-font-size + 10px;   /* Height of the footer */
+   
+  .fright {
+     a {
+        text-decoration: none;
+        color: #035AA8;
+     }
+     a:hover {
+        color: gray;
+     }
+     display: block;
+     float: right;
+     margin-right: @footer-right-margin;
+     margin-bottom: @footer-bottom-margin;
+     font-size: @footer-font-size;
+     line-height: @footer-font-size;
+  }
+}
+
+.wrapper {
+   .content {
+      .img-wrapper {
+         img {
+            display: block;
+            width: @img-index-width;
+            height: @img-index-height;
+            margin-left: @btn-submit-index-width * -0.5;
+         }
+         margin-left: auto;
+         margin-right: auto;
+         width: @img-index-width;
+      }
+
+      fieldset {
+         .query-wrapper {
+             display: block;
+             margin: auto;
+             width: @inp-search-index-width + @btn-submit-index-width + @default-border-width * 3;
+
+             .item {
+                display: block;
+                float: left;
+                border: none;
+             }
+
+             .item-query {
+                .input-index {
+                    .inp-query-index;
+                }
+                .input-index:focus {
+                    border: 1px solid @input-border-focus-color;
+                }
+             }
+
+             .item-submit { 
+                .query-btn {
+                    .unified-btn-style;
+                    .btn-query-style(@btn-submit-index-width, @search-index-height, @submit-index-font-size);
+                }
+                .query-btn:hover {
+                    .unified-btn-focus-style;
+                }
+             }
+         }
+         .float_clear(query-wrapper, ~'.');
+         border: none;
+         
+         margin-top: @index-form-top-margin; /* vertical space with image */
+         margin-bottom: @index-form-bottom-margin;  /* vertical space with baseline */
+      }
+   }
+   position: absolute;
+   width: 100%;
+   top: 50%;
+   left : 0;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: -193px - 11px; /* half of div.content height, take account of footer height */
+}
+

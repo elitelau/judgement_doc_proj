@@ -1,0 +1,161 @@
+@import "unistyle.less";
+
+.set-chapter-marker(@icon-font-size, @font-size, @item-line-height, @item-vgap) {
+   .doc-ch-marker {
+      display: table-cell;
+      vertical-align: middle;
+      margin: 0 0 0 0;
+      padding: 0 0 0 0;
+      width: 80px;
+      overflow: hidden;
+      margin-left: @search-left-margin;
+
+      .start-point {
+         position: relative;
+         color: #cfcfcf;
+         height: @item-line-height;
+         margin-bottom: -2px;
+         
+         .icon {
+            position: absolute;
+            bottom: 0;
+            font-family: 'Glyphicons Halflings';
+            font-style: normal;
+            font-weight: normal;
+            font-size: @icon-font-size;
+
+            &:before {
+               content : "\e056";
+            }
+         }
+         
+         .text {
+            position: absolute;
+            left: @icon-font-size + 5px;
+            bottom: 0;
+            font-size: @font-size;
+         }
+      }
+      .vline-bg {
+         background-image: url('/images/ch-nav-line.png');
+         background-repeat: repeat-y;
+         background-position: 0 50%;
+         background-attachment: scroll;
+         background-size: auto;
+
+         .ch-lst {
+            list-style-type: circle;
+            padding-top: @item-vgap / 2;
+            padding-bottom: @item-vgap / 2;
+
+            >li {
+               list-style-type: none;
+               background-image: url('/images/ch-nav-linenode.png');
+               background-repeat: no-repeat;
+               background-position: left center;
+               font-size: @font-size;
+               line-height: @item-line-height;
+               height: @item-line-height;
+               width: 100px;
+               display: list-item;
+               cursor: pointer;
+
+               margin-top: 3px;   /* 7.8px */
+               text-align: left;
+
+               &:hover {
+                  background-image: url('/images/ch-nav-cursor.png');
+                  background-position: -1% 4px;
+                  font-weight: bold;
+                  color: @btn-focus-color; 
+               }
+
+               i {
+                 display: block;
+                 margin-left: @font-size;
+                 font-size: @font-size;
+                 text-indent: 2px;
+               }
+            }
+         }
+      }
+      .end-point {
+         height: 10px;
+         img {
+            vertical-align: top;
+         }
+      }
+   }
+}
+
+.set-doc-overflow(@turnon) when (@turnon = true) {
+   overflow-x: hidden;
+   overflow-y: scroll;
+   padding: 0px 20px;
+}
+
+.set-document(@width, @font-size, @p_vgap, @header-font-size, @header-line-height, @of-enable) {
+   .doc {
+      width: @width;
+      height: 100%;
+      margin: 0px;
+      font-size: @font-size;
+      line-height: 20px;
+      position: inherit;   /* inherit with 'relative' for scrollup calculation when overflow */
+      .set-doc-overflow(@of-enable);
+
+      white-space: pre-wrap; /* css-3 */    
+      white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+      white-space: -pre-wrap; /* Opera 4-6 */    
+      white-space: -o-pre-wrap; /* Opera 7 */    
+      word-wrap: break-word; /* Internet Explorer 5.5+ */
+
+      .chapter {
+         position: inherit;
+         float: left;
+         clear: both;
+         width: 100%;
+         padding: 0px;
+         margin: 0px;
+         /* border: 1px solid red; */
+         margin-top: @font-size * 1.5;
+
+      }
+
+      .chapter.fact, .chapter.argument_process, .chapter.court_conclusion, .chapter.disagreement, .chapter.attachment
+      {
+         p {
+           text-indent: @font-size * 2;
+           & + p {
+              margin-top: @p_vgap;
+           }
+           line-height: @font-size * 1.5; 
+         }
+      }
+
+      .chapter.object, .chapter.sentence {
+        p {
+          text-indent: @font-size * 2;   /* together with <p>s of none header and footer divs  */
+        }
+      }
+
+      .chapter.header 
+      {
+         width: 100%;
+         text-align: center;
+         font-size: @header-font-size;
+         line-height: @header-line-height;
+         .docid {
+            text-align: right;
+            font-size: @font-size;
+         }
+      }
+
+      .chapter.footer {
+         line-height: @font-size * 2;
+         text-align: right;
+         clear: both;
+         margin-bottom: @font-size * 1.5;
+      }
+   }
+}

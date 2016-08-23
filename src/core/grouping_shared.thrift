@@ -1,0 +1,1 @@
+../zmpan/thrift/grouping_shared.thrift

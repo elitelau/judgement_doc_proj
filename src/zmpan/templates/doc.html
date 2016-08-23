@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %}文书正文{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/stylesheets/doc.css">
+<script src="/javascript/jquery-2.2.2.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+    function init(inner_html) {
+       document.getElementById('content').innerHTML = inner_html;
+    }
+       
+    $(document).ready(function(){
+       $(document).on('click', '.ch-marker', function() {
+          var chapter_name = $(this).attr('name');
+          var target_elem = undefined;
+          var arr = $(document.getElementById('content')).find('div.doc');
+          if (arr.length > 0)  
+          {
+             var doc = arr[0];
+             if (doc) {
+                var arr = $(doc).find("." + chapter_name);
+                   {# target_elem = href_elem.get(0); #}
+                if (arr.length > 0) {
+                   var target_elem = arr[0];
+                   var pos_top = $(target_elem).position().top;
+                   var top = $(target_elem).offset().top;
+                   var relative_top = $(document.body).scrollTop();
+                   top -= 16 * 1.5;  {# div vertical gap #}
+                   $('body').animate({scrollTop: top}, 500);
+                }
+             }
+          }
+       });
+    });
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+<div id="content">
+</div>
+
+{% include "./modules/footer.html" %}
+{% endblock %}

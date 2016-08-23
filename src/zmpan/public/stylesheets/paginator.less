@@ -1,0 +1,63 @@
+@import "unistyle.less";
+
+.set_paginator {
+   .paginate-container {
+      display: block;
+      margin: auto;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      .pagination {
+         display: inline-block;
+         text-align:center;
+         vertical-align: middle;
+         >* {
+            border: 1px solid #E5E5E5; 
+            font-family: Helvetica, arial, nimbussansl, liberationsan;
+            font-size: @submit-index-font-size;
+            font-weight: bold;
+            color: @btn-focus-color;
+            padding: 7px 12px;
+            margin-left: -1px;
+            background-color: white;
+            float: left;
+         }
+
+         >a {
+            text-decoration: none;
+
+            &:hover, &:focus, &:active {
+               background-color: #E7E7E7;
+            }
+         }
+
+         >.previous_page {
+            margin-left: 0px;
+            border-radius: 2px 0px 0px 2px;
+         }
+
+         >.next_page {
+            border-radius: 0px 2px 2px 0px;
+         }
+
+         >.current {
+            background-color: @btn-focus-color;
+            border-color: @btn-focus-color;
+            font-variant: normal;
+            font-style: normal;
+            color: white;
+         }
+         >.disabled {
+            color: #D3D3D3; /* color: #D3D3D3; */
+            background-color: #FAFAFA;  /* disabled color */
+         }
+         &:before, &:after {
+            width: 0px;
+            height: 0px;
+            content: "\0020";
+            display: block;
+            clear:both;
+         }
+      }
+   }
+}

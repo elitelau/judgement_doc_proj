@@ -1,0 +1,91 @@
+@import "unistyle.less";
+
+@content-width: 968px;
+@text-font-size: 14px;
+.content {
+   width: @content-width;
+   margin-left: @search-left-margin;
+
+   .section {
+      margin-top: 50px; 
+      h1 {
+         font-size: 24px;
+         font-weight: bold;
+         line-heigth: 24px * 1.5;
+         margin-bottom: 24px;
+         color: blue;
+      }
+      p {
+         font-size: @text-font-size;
+         line-height: @text-font-size * 1.5;
+         & + p {
+           margin-top: 5px;
+         }
+
+         .intro {
+            font-weight: bold;
+            margin-right: @text-font-size / 2;
+            &:after {
+               content: '\A';
+               white-space: pre;
+            }
+         }
+
+         .email {
+            color: blue;
+         }
+      } 
+   }
+
+   .questions {
+      font-size: @text-font-size;
+      ul {
+         font-size: inherit;
+         list-style-type: none;
+         line-height: @text-font-size * 1.5;
+         li {
+            line-height: inherit;
+            .intro {
+               font-weight: bold;
+               margin-right: @text-font-size / 2;
+            }
+         }
+         margin: 20px 0;
+      }
+
+   }
+
+   .progress {
+      .done-lst {
+         list-style-type: none;
+         &:before {
+            content: 'DONE list:\A';
+            white-space: pre;
+            font-weight: bold;
+            color: red;
+         }
+         i {
+            text-decoration: underline;
+         }
+         margin-bottom: 20px;
+      }
+
+      .todo-lst {
+         &:before {
+            content: 'TODO list:\A';
+            white-space: pre;
+            font-weight: bold;
+            color: red;
+         }
+
+         >li {
+            margin-left:@text-font-size * 1.5;
+            line-height: @text-font-size * 1.5;
+         }
+      }
+   }
+
+   .aboutus {
+      margin-bottom: 50px;
+   }
+}

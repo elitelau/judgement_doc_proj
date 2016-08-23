@@ -1,0 +1,265 @@
+{% extends 'layout.html' %}
+
+{% block title %}相似文书组:{{ keyword }} {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/docs.css">
+    <!--link rel='stylesheet' href='/stylesheets/bootstrap/css/bootstrap.min.css'-->
+    <script src="/javascript/jquery-2.2.2.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/javascript/comm.js"></script>
+
+    <script type="text/javascript">
+    function generate_ch_marker_html(target_doc_elem) {
+       if (target_doc_elem) {
+          var ch_lst_html = "";
+          var marker_list = {};
+          var marker_index_array = ['header', 'object', 'fact', 'argument_process',
+                                    'court_conclusion', 'sentence', 'disagreement',
+                                    'footer', 'attachment'];
+          var marker_name_array = ["开头", "原被告", "案由", "审理过程", "本院认为", "判决结果", "再诉申明",
+                                   "落款", "附件"];
+         
+          if (target_doc_elem) {
+             $(target_doc_elem).find('.chapter').each(function () {
+                var class_name = $(this).removeClass('chapter').attr('class');
+                marker_list[class_name] = 1;
+                $(this).addClass('chapter');
+             });
+
+             for(var i = 0; i < marker_index_array.length; ++i) {
+                if (marker_list.hasOwnProperty(marker_index_array[i])) {
+                   ch_lst_html += '           <li class="ch-marker" name="' + marker_index_array[i] + 
+                                  '"><i>' + marker_name_array[i] + '</i></li>';
+                }
+             }
+          }
+          var inner_html = "";
+          inner_html = '<div class="doc-ch-marker">' +
+                       '   <div class="start-point"><span class="icon"></span><span class="text">目录</span></div>' +
+                       '      <div class="vline-bg">' +
+                       '         <ul class="ch-lst">' + 
+                       ch_lst_html + 
+                       '         </ul>' +
+                       '   </div>' +
+                       '   <div class="end-point"><img src="/images/ch-nav-spot.png"/></div>' +
+                       '</div>';
+          return inner_html;
+       }
+       
+    }
+    $(document).ready(function(){
+       $(".row").click(function() {
+          var docid = $(this).data("docid");
+          var w = window.open("doc/" + docid, '_blank');
+          if (w) {
+             w.focus();
+          }
+          
+          var doc_groups_elem = document.getElementById('10docs');
+          var target_doc_elem = $(doc_groups_elem).children('[data-docid=' + docid + ']')[0];
+          var inner_html = "";
+          if (target_doc_elem) {
+             var ch_marker_html = generate_ch_marker_html(target_doc_elem);
+             var ch_marker_wrapper_html = '<div class="doc-ch-marker-wrapper">\n' + ch_marker_html + '\n</div>';
+          
+             var doc_html = target_doc_elem.outerHTML;
+             inner_html = '<div class="doc-wrapper">' + "\n" + doc_html + '\n' + ch_marker_wrapper_html + "\n</div>";
+          }
+          w.onload = function() {
+             w.init(inner_html);
+          }
+       });
+
+       $(".cell").mouseenter(function() {
+          {# $(this).css("background-color", "#9A9A9A"); #}
+          var expand_elem = $(this).children('span')[0];  <!-- expand element -->
+          var text_elem = $(this).children('div')[0];  <!-- text element -->
+            
+          if (expand_elem && text_elem) {
+             var full_width = $(text_elem).width();
+             var t = document.createElement('span');
+             t.innerHTML = text_elem.textContent;
+             t.style.visibility = 'hidden';
+             document.body.appendChild(t);
+             
+             var text_width = $(t).width();
+             document.body.removeChild(t);
+         
+             {# check if should collapse #}
+             var index = 0;
+             if ($(this).hasClass('punishment')) {
+                index = 0;
+             }
+             if ($(this).hasClass('hurt')) {
+                index = 1;
+             }
+             if ($(this).hasClass('docid')) {
+                index = 2;
+             }
+             
+             var detail_node = this.parentElement.nextElementSibling; 
+             if (detail_node && detail_node.className === 'doc_detail_holder' &&
+                 $(detail_node.firstElementChild).data("colid") === index) 
+             {
+                 $(expand_elem).removeClass().addClass('sp-icon-expand collapse');
+             }
+             else {
+                 $(expand_elem).removeClass().addClass('sp-icon-expand expand');
+             }
+
+
+             $(text_elem).animate({
+                'text-indent': 13 
+             }, {duration: 400, queue: false});
+
+             $(expand_elem).css("display", "inline");
+             $(expand_elem).animate({
+                'left': full_width + 1
+             }, {duration: 400, queue: false});
+
+             return false;  {# equals to: preventDefault and stopPropagation #}
+          }
+          return true;
+       }).mouseleave(function() {
+          {# $(this).css("background-color", "white");  #}
+          var expand_elem = $(this).children('span')[0];  <!-- expand element -->
+          var text_elem = $(this).children('div')[0];  
+          
+          if (text_elem && expand_elem) {
+             $(text_elem).stop(true, true).animate({
+                'text-indent': 0
+             }, 100, function(){
+                $(text_elem).css("text-indent", 0);
+             });
+             
+             var width = $(this).parent().width();
+             $(expand_elem).stop(true, true).animate({
+                'left': width - 11
+             }, 100, function() {
+                $(expand_elem).css("display", "none");
+             });
+          }
+       });
+
+       $(".cell").click( function() {
+          var expand_elem = $(this).children('span')[0];
+          var text_elem = $(this).children('div.inner_text')[0]; 
+          var bias_array = ['40px', '140px', '304px']; {# ['72px', '181px', '401px']; align with collapse icon #}
+          var jmp_ch_array = ['sentence', 'court_conclusion', 'header'];
+          var index = 0;
+          var stop_propagation = false;
+
+          if ($(this).hasClass('punishment')) {
+             index = 0;
+          }
+          if ($(this).hasClass('hurt')) {
+             index = 1;
+          }
+          if ($(this).hasClass('docid')) {
+             index = 2;
+          }
+          if (expand_elem && text_elem) {
+             var detail_node = this.parentElement.nextElementSibling; 
+             if (!detail_node || detail_node.className !== 'doc_detail_holder') {
+                var docid = $(this).parent().data("docid");
+                var inner_html = '<div class="doc_detail" data-docid=' + $(this).parent().data("docid") + ' data-colid=' + index + '>\n<i class="icon-spike"></i>\n</div>';
+                $(this).parent().after($('<div />', {
+                                 class: 'doc_detail_holder'
+                              }));
+                this.parentElement.nextSibling.innerHTML = inner_html;
+
+                var doc_groups_elem = document.getElementById('10docs');
+                var target_doc_elem = $(doc_groups_elem).children('[data-docid=' + docid + ']')[0];
+                inner_html = generate_ch_marker_html(target_doc_elem);
+                var doc_ch_marker = document.createElement('div');
+                $(doc_ch_marker).addClass('doc-ch-marker-wrapper');
+                doc_ch_marker.innerHTML = inner_html;
+                this.parentElement.nextSibling.firstElementChild.appendChild(doc_ch_marker);
+
+                $(this.parentElement.nextSibling.firstElementChild.firstElementChild).css('left', bias_array[index]);
+                $(expand_elem).removeClass().addClass('sp-icon-expand collapse');  <!-- change icon to collapse -->
+
+                if (target_doc_elem) {
+                   var doc_elem = target_doc_elem.cloneNode(true);
+                   this.parentElement.nextSibling.firstElementChild.appendChild(doc_elem);
+                   scrollDocToChapter(doc_elem, jmp_ch_array[index], 100); 
+                }
+             }
+             else {
+                var col_id = $(detail_node.firstElementChild).data("colid");
+                if (col_id === index) {
+                   detail_node.parentElement.removeChild(detail_node); 
+                   $(expand_elem).removeClass().addClass('sp-icon-expand expand');  <!-- change icon to expand -->
+                }
+                else {
+                   $(detail_node.firstElementChild).data("colid", index);
+                   $(detail_node.firstElementChild.firstElementChild).css('left', bias_array[index]);
+                   $(expand_elem).removeClass().addClass('sp-icon-expand collapse');  <!-- change icon to collapse -->
+                   var doc_elem = $(detail_node).find(".doc")[0];
+                   if (doc_elem) {
+                      scrollDocToChapter(doc_elem, jmp_ch_array[index], 100); 
+                   }
+                }
+             }
+             return false;
+          }
+          return true;
+       });
+
+       $(document).on('click', '.ch-marker', function() {
+          var chapter_name = $(this).attr('name');
+          var target_elem = undefined;
+          if ($(this).parents('.doc_detail').length > 0)  
+          {
+             var doc_detail = $(this).parents('.doc_detail')[0];
+             var doc = $(doc_detail).children('.doc')[0];
+             if (doc) {
+                var href_elem = $(doc).find("." + chapter_name).eq(0);
+                if (href_elem) {
+                   target_elem = href_elem.get(0);
+                }
+                if (target_elem) {
+                   var top = $(target_elem).position().top;
+                   top += $(doc).scrollTop();
+                   $(doc).animate({scrollTop: top}, 500);
+                }
+             }
+          }
+       });
+    });
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% include "./modules/header.html" %}
+    <div class="content">
+       {% if not is_null_content %} 
+          <div class="table">
+          {% for doc in doc_list %}
+             <div class="row" data-docid={{ doc.docid }}>
+                <div class="cell punishment"><div class="inner_text">{{ doc.duration }}</div><span class="sp-icon-expand"></span></div>
+                <div class="cell hurt"><div class="inner_text">UNKNOWN</div><span class="sp-icon-expand"></span></div>
+                <div class="cell docid"><div class="inner_text">{{ doc.name }}</div><span class="sp-icon-expand"></span></div>
+                <div class="cell date"><div class="inner_text">{{ doc.date }}</div></div>
+                <div class="cell court"><div class="inner_text">{{ doc.court_name }}</div></div>
+                <div class="cell kind"><div class="inner_text">UNKN</div></div>
+             </div>
+          {% endfor %}
+          </div>
+          
+          <div class="paginate-container">
+             <div class="pagination">
+                {% autoescape false %}{{ paginator_html }}{% endautoescape %}
+             </div>
+          </div>
+       {% endif %}
+    </div>
+
+    <div id="10docs" style="display:none">
+       {% for doc in doc_list %}
+          <div class="doc" data-docid={{ doc.docid }}>{% autoescape false %}{{ doc.inner_html }}{% endautoescape %}</div>
+       {% endfor %} 
+    </div>
+    {% include "./modules/footer.html" %}
+{% endblock %}

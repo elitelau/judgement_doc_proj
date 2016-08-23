@@ -1,0 +1,161 @@
+@import "unistyle.less";
+@import "header.less";
+@import "document.less";
+@import "paginator.less";
+@import "footer.less";
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('@{icon-font-path}@{icon-font-name}.eot');
+  src: url('@{icon-font-path}@{icon-font-name}.eot?#iefix') format('embedded-opentype'),
+       url('@{icon-font-path}@{icon-font-name}.woff2') format('woff2'),
+       url('@{icon-font-path}@{icon-font-name}.woff') format('woff'),
+       url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
+       url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
+}
+
+.set-header(@search-left-margin);
+
+@content-width: 968px;
+@column-gap: 20px;
+@cell-height: 54px;
+@cell-font-size: 13px;
+@cell-focus-color: #9A9A9A;
+
+.set_cell(@selector, @pre: ~'', @width, @do_expand) {
+   @{pre}@{selector} {
+      width: @width;
+      .inner_text {
+         width: @width - @column-gap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+      }
+
+      .inner_text when(@do_expand = true) {
+         line-height: @cell-height;
+         top: 0;
+         left: 0;
+         position: absolute;
+      }
+      .sp-icon-expand when(@do_expand = true) {
+         display: none;
+
+         font-family: 'Glyphicons Halflings';
+         font-style: normal;
+         font-weight: normal;
+         font-size: 11px;
+         color: black;
+         line-height: @cell-height;
+         top: 0;
+         left: @width - 11px;
+         width: 11px;
+         position: absolute;
+
+         opacity: 50%;
+
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
+         z-index: 1;
+            
+         &.expand:before {
+            content: "\e259";
+         }
+         &.collapse:before {
+            content: "\e260";
+         }
+      }
+   }
+}
+
+@chapter-item-vgap: 5px;
+@chapter-item-line-height: 20px;
+.content {
+   .table {
+      display: inline-block;
+      margin-top: 40px;
+      margin-left: @search-left-margin;
+      width: @content-width;
+
+      >.row {
+         width: @content-width;
+         display: inline-block;
+         vertical-align: middle;
+         clear: both;
+         &:hover {
+            background-color: #f1f1f1;
+         }
+
+         >.cell {
+            height: @cell-height;
+            line-height: 54px;
+            float: left;
+            display: block;
+            font-size: @cell-font-size;
+            position: relative;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+         }
+
+         .set_cell(punishment, ~'.', 91px, true);
+         .set_cell(hurt, ~'.', 109px, true);
+         .set_cell(docid, ~'.', 220px, true);
+         .set_cell(date, ~'.', 91px, false);
+         .set_cell(court, ~'.', 297px, false);
+         .set_cell(kind, ~'.', 106px, false);
+
+         .punishment, .hurt, .docid {
+            &:hover {
+               background-color: @cell-focus-color;
+            }
+         }
+      }
+      &:after {
+         width: 0px;
+         height: 0px;
+         content: "\0020";
+         display: block;
+         clear:both;
+      }
+
+      .doc_detail_holder {
+         .doc_detail {
+             width: @content-width;
+             height: 250px;
+             border: 1px solid #DDDDDD;
+             border-radius: 5px 5px 5px 5px;
+             position: relative;  /* make sure 'relative' inherited down to 'div.chapter' elements */
+             margin-top: 8px;
+           
+             .icon-spike {
+                background-image: url('/images/sprites-1.9.2.4c54885a.png');
+                background-position: -200px -165px;
+                background-repeat: no-repeat;
+                color: rgb(34, 34, 34);
+                display: block;
+                height: 8px;
+                width: 13px;
+                top: -8px;
+                left: 70px;
+                position: absolute;
+             }
+
+             .doc-ch-marker-wrapper {
+                display: table;
+                height: 100%;
+                position: absolute;
+                right: 5px;
+
+                .set-chapter-marker(20px, 13px, @chapter-item-line-height, @chapter-item-vgap);
+             }
+             .set-document(800px, 14px, 5px, 28px, 40px, true);
+         }
+      }
+   }
+   .set_paginator();
+}
+
+
+.set-footer(@content-width, @search-left-margin);

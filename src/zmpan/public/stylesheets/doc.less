@@ -1,0 +1,44 @@
+@import "unistyle.less";
+@import "document.less";
+@import "footer.less";
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('@{icon-font-path}@{icon-font-name}.eot');
+  src: url('@{icon-font-path}@{icon-font-name}.eot?#iefix') format('embedded-opentype'),
+       url('@{icon-font-path}@{icon-font-name}.woff2') format('woff2'),
+       url('@{icon-font-path}@{icon-font-name}.woff') format('woff'),
+       url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
+       url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
+}
+
+@content-width: 968px;
+@chapter-item-vgap: 15px;
+@chapter-item-line-height: 21px;
+@doc-margin-top: 40px;
+
+#content {
+   width: @content-width;
+   position: static; 
+  
+   .doc-wrapper {
+      margin-left: @search-left-margin;
+      margin-top: @doc-margin-top;
+      width: 100%;
+      position: inherit;
+
+      .set-document(839px - 15px, 16px, 6px, 30px, 41px, false);
+      .float_clear(doc, ~'.');  /* floating clear of div.doc */
+      .doc-ch-marker-wrapper {
+         display: table;
+         position: fixed;
+         top: 24px + 123px + 16px * 1.5 - 14px + @doc-margin-top;
+         left: @search-left-margin + 839px + 5px + 22px;
+         height: 300px;
+
+         .set-chapter-marker(24px, 13px, @chapter-item-line-height, @chapter-item-vgap);
+      }
+   }
+}
+
+.set-footer(@content-width, @search-left-margin);

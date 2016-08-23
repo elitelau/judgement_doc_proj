@@ -1,0 +1,126 @@
+!prev [1] !next 
+
+!prev [1] 2 next 
+prev 1 [2] !next 
+
+!prev [1] 2 3 next 
+prev 1 [2] 3 next 
+prev 1 2 [3] !next 
+
+!prev [1] 2 3 4 next 
+prev 1 [2] 3 4 next 
+prev 1 2 [3] 4 next 
+prev 1 2 3 [4] !next 
+
+!prev [1] 2 3 4 5 next 
+prev 1 [2] 3 4 5 next 
+prev 1 2 [3] 4 5 next 
+prev 1 2 3 [4] 5 next 
+prev 1 2 3 4 [5] !next 
+
+!prev [1] 2 3 4 5  6 next 
+prev 1 [2] 3 4 5  6 next 
+prev 1 2 [3] 4 5  6 next 
+prev 1 2 3 [4] 5 6 next 
+prev 1 2 3 4 [5] 6 next 
+prev 1 2 3 4 5 [6] !next 
+
+!prev [1] 2 3 4 5  6 7 next 
+prev 1 [2] 3 4 5  6 7 next 
+prev 1 2 [3] 4 5  6 7 next 
+prev 1 2 3 [4] 5 6  7 next 
+prev 1 2 3 4 [5] 6 7 next 
+prev 1 2 3 4 5 [6] 7 next 
+prev 1 2 .. 5 6 [7] !next 
+
+!prev [1] 2 3 4 5 6 7 8 next 
+prev 1 [2] 3 4 5 6 7 8 next 
+prev 1 2 [3] 4 5 6 7 8 next 
+prev 1 2 3 [4] 5 6  7 8 next 
+prev 1 2 3 4 [5] 6 7  8 next 
+prev 1 2 3 4 5 [6] 7 8 next 
+prev 1 2 .. 5 6 [7] 8 next 
+prev 1 2 .. 6 7 [8] !next 
+
+!prev [1] 2 3 4 5 .. 8 9 next 
+prev 1 [2] 3 4 5 .. 8 9 next 
+prev 1 2 [3] 4 5 .. 8 9 next 
+prev 1 2 3 [4] 5 6 7 8 9 next 
+prev 1 2 3 4 [5] 6 7  8 9 next 
+prev 1 2 3 4 5 [6] 7 8  9 next 
+prev 1 2 .. 5 6 [7] 8 9 next 
+prev 1 2 .. 6 7 [8] 9 next 
+prev 1 2 .. 7 8 [9] !next 
+
+!prev [1] 2 3 4 5 .. 9 10 next 
+prev 1 [2] 3 4 5 .. 9 10 next 
+prev 1 2 [3] 4 5 .. 9 10 next 
+prev 1 2 3 [4] 5 6 .. 9 10 next 
+prev 1 2 3 4 [5] 6 7 8 9 10 next 
+prev 1 2 3 4 5 [6] 7 8  9 10 next 
+prev 1 2 .. 5 6 [7] 8 9  10 next 
+prev 1 2 .. 6 7 [8] 9 10 next 
+prev 1 2 .. 7 8 [9] 10 next 
+prev 1 2 .. 8 9 [10] !next 
+
+!prev [1] 2 3 4 5 .. 10 11 next 
+prev 1 [2] 3 4 5 .. 10 11 next 
+prev 1 2 [3] 4 5 .. 10 11 next 
+prev 1 2 3 [4] 5 6 .. 10 11 next 
+prev 1 2 3 4 [5] 6 7 .. 10 11 next 
+prev 1 2 3 4 5 [6] 7 8 9 10 11 next 
+prev 1 2 .. 5 6 [7] 8 9  10 11 next 
+prev 1 2 .. 6 7 [8] 9 10  11 next 
+prev 1 2 .. 7 8 [9] 10 11 next 
+prev 1 2 .. 8 9 [10] 11 next 
+prev 1 2 .. 9 10 [11] !next 
+
+!prev [1] 2 3 4 5 .. 11 12 next 
+prev 1 [2] 3 4 5 .. 11 12 next 
+prev 1 2 [3] 4 5 .. 11 12 next 
+prev 1 2 3 [4] 5 6 .. 11 12 next 
+prev 1 2 3 4 [5] 6 7 .. 11 12 next 
+prev 1 2 3 4 5 [6] 7 8 .. 11 12 next 
+prev 1 2 .. 5 6 [7] 8 9 10 11 12 next 
+prev 1 2 .. 6 7 [8] 9 10  11 12 next 
+prev 1 2 .. 7 8 [9] 10 11  12 next 
+prev 1 2 .. 8 9 [10] 11 12 next 
+prev 1 2 .. 9 10 [11] 12 next 
+prev 1 2 .. 10 11 [12] !next 
+
+!prev [1] 2 3 4 5 .. 12 13 next 
+prev 1 [2] 3 4 5 .. 12 13 next 
+prev 1 2 [3] 4 5 .. 12 13 next 
+prev 1 2 3 [4] 5 6 .. 12 13 next 
+prev 1 2 3 4 [5] 6 7 .. 12 13 next 
+prev 1 2 3 4 5 [6] 7 8 .. 12 13 next 
+prev 1 2 .. 5 6 [7] 8 9 .. 12 13 next 
+prev 1 2 .. 6 7 [8] 9 10 11 12 13 next 
+prev 1 2 .. 7 8 [9] 10 11  12 13 next 
+prev 1 2 .. 8 9 [10] 11 12  13 next 
+prev 1 2 .. 9 10 [11] 12 13 next 
+prev 1 2 .. 10 11 [12] 13 next 
+prev 1 2 .. 11 12 [13] !next 
+
+!prev [1] 2 3 4 5 .. 63 64 next 
+prev 1 [2] 3 4 5 .. 63 64 next 
+prev 1 2 [3] 4 5 .. 63 64 next 
+prev 1 2 3 [4] 5 6 .. 63 64 next 
+prev 1 2 3 4 [5] 6 7 .. 63 64 next 
+prev 1 2 3 4 5 [6] 7 8 .. 63 64 next 
+prev 1 2 .. 5 6 [7] 8 9 .. 63 64 next 
+prev 1 2 .. 6 7 [8] 9 10 .. 63 64 next 
+prev 1 2 .. 7 8 [9] 10 11 .. 63 64 next 
+prev 1 2 .. 8 9 [10] 11 12 .. 63 64 next 
+
+prev 1 2 .. 52 53 [54] 55 56 .. 63 64 next 
+prev 1 2 .. 53 54 [55] 56 57 .. 63 64 next 
+prev 1 2 .. 54 55 [56] 57 58 .. 63 64 next 
+prev 1 2 .. 55 56 [57] 58 59 .. 63 64 next 
+prev 1 2 .. 56 57 [58] 59 60 .. 63 64 next 
+prev 1 2 .. 57 58 [59] 60 61 62 63 64 next 
+prev 1 2 .. 58 59 [60] 61 62  63 64 next 
+prev 1 2 .. 59 60 [61] 62 63  64 next 
+prev 1 2 .. 60 61 [62] 63 64 next 
+prev 1 2 .. 61 62 [63] 64 next 
+prev 1 2 .. 62 63 [64] !next 

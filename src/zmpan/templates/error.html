@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/error.css">
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+   <h1>{{ error }}</h1>
+   <p>{{ message }}</p>
+{% endblock %}

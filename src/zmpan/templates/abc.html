@@ -1,0 +1,429 @@
+{% extends 'layout.html' %}
+
+{% block title %}相似文书组:{{ keyword }} {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/docs.css">
+    <!--link rel='stylesheet' href='/stylesheets/bootstrap/css/bootstrap.min.css'-->
+    <script src="/javascript/jquery-2.2.2.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/javascript/comm.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+       $(".cell").mouseenter(function() {
+          {# $(this).css("background-color", "#9A9A9A"); #}
+          var expand_elem = $(this).children('span')[0];  <!-- expand element -->
+          var text_elem = $(this).children('div')[0];  <!-- text element -->
+            
+          if (expand_elem && text_elem) {
+             var full_width = $(text_elem).width();
+             var t = document.createElement('span');
+             t.innerHTML = text_elem.textContent;
+             t.style.visibility = 'hidden';
+             document.body.appendChild(t);
+             
+             var text_width = $(t).width();
+             document.body.removeChild(t);
+         
+             {# check if should collapse #}
+             var index = 0;
+             if ($(this).hasClass('punishment')) {
+                index = 0;
+             }
+             if ($(this).hasClass('hurt')) {
+                index = 1;
+             }
+             if ($(this).hasClass('docid')) {
+                index = 2;
+             }
+             
+             var detail_node = this.parentElement.nextElementSibling; 
+             if (detail_node && detail_node.className === 'doc_detail_holder' &&
+                 $(detail_node.firstElementChild).data("colid") === index) 
+             {
+                 $(expand_elem).removeClass().addClass('sp-icon-expand collapse');
+             }
+             else {
+                 $(expand_elem).removeClass().addClass('sp-icon-expand expand');
+             }
+
+
+             $(text_elem).animate({
+                'text-indent': 13 
+             }, {duration: 400, queue: false});
+
+             $(expand_elem).css("display", "inline");
+             $(expand_elem).animate({
+                'left': full_width + 1
+             }, {duration: 400, queue: false});
+          }
+       }).mouseleave(function() {
+          {# $(this).css("background-color", "white");  #}
+          var expand_elem = $(this).children('span')[0];  <!-- expand element -->
+          var text_elem = $(this).children('div')[0];  
+          
+          if (text_elem && expand_elem) {
+             $(text_elem).stop(true, true).animate({
+                'text-indent': 0
+             }, 100, function(){
+                $(text_elem).css("text-indent", 0);
+             });
+             
+             var width = $(this).parent().width();
+             $(expand_elem).stop(true, true).animate({
+                'left': width - 11
+             }, 100, function() {
+                $(expand_elem).css("display", "none");
+             });
+          }
+       });
+
+       $(".cell").click( function() {
+          var expand_elem = $(this).children('span')[0];
+          var text_elem = $(this).children('div.inner_text')[0]; 
+          var bias_array = ['40px', '140px', '304px']; {# ['72px', '181px', '401px']; align with collapse icon #}
+          var jmp_ch_array = ['sentence', 'court_conclusion', 'header'];
+          var index = 0;
+
+          if ($(this).hasClass('punishment')) {
+             index = 0;
+          }
+          if ($(this).hasClass('hurt')) {
+             index = 1;
+          }
+          if ($(this).hasClass('docid')) {
+             index = 2;
+          }
+          if (expand_elem && text_elem) {
+             var detail_node = this.parentElement.nextElementSibling; 
+             if (!detail_node || detail_node.className !== 'doc_detail_holder') {
+                var docid = $(this).parent().data("docid");
+                var inner_html = '<div class="doc_detail" data-docid=' + $(this).parent().data("docid") + ' data-colid=' + index + '>\n<i class="icon-spike"></i>\n</div>';
+                $(this).parent().after($('<div />', {
+                                 class: 'doc_detail_holder'
+                              }));
+                this.parentElement.nextSibling.innerHTML = inner_html;
+
+                var doc_groups_elem = document.getElementById('10docs');
+                var marker_list = {};
+                var marker_index_array = ['header', 'object', 'fact', 'argument_process',
+                                           'court_conclusion', 'sentence', 'disagreement',
+                                           'footer', 'attachment'];
+                var marker_name_array = ["开头", "原被告", "案由", "审理过程", "本院认为", "判决结果", "再诉申明",
+                                         "落款", "附件"];
+                var target_doc_elem = $(doc_groups_elem).children('[data-docid=' + docid + ']')[0];
+                var ch_lst_html = "";
+                if (target_doc_elem) {
+                   $(target_doc_elem).find('.chapter').each(function () {
+                      var class_name = $(this).removeClass('chapter').attr('class');
+                      marker_list[class_name] = 1;
+                      $(this).addClass('chapter');
+                   });
+
+                   for(var i = 0; i < marker_index_array.length; ++i) {
+                      if (marker_list.hasOwnProperty(marker_index_array[i])) {
+                         ch_lst_html += '           <li class="ch-marker" name="' + marker_index_array[i] + 
+                                        '"><i>' + marker_name_array[i] + '</i></li>';
+                      }
+                   } 
+                }
+                inner_html = '<div class="doc-ch-marker">' +
+                             '   <div class="start-point"><span class="icon"></span><span class="text">目录</span></div>' +
+                             '      <div class="vline-bg">' +
+                             '         <ul class="ch-lst">' + 
+                             ch_lst_html + 
+                             '         </ul>' +
+                             '   </div>' +
+                             '   <div class="end-point"><img src="http://wenshu.court.gov.cn/Assets/img/content/content_directory_spot2.png"/></div>' +
+                             '</div>';
+                var doc_ch_marker = document.createElement('div');
+                $(doc_ch_marker).addClass('doc-ch-marker-wrapper');
+                doc_ch_marker.innerHTML = inner_html;
+                this.parentElement.nextSibling.firstElementChild.appendChild(doc_ch_marker);
+
+                $(this.parentElement.nextSibling.firstElementChild.firstElementChild).css('left', bias_array[index]);
+                $(expand_elem).removeClass().addClass('sp-icon-expand collapse');  <!-- change icon to collapse -->
+
+                if (target_doc_elem) {
+                   var doc_elem = target_doc_elem.cloneNode(true);
+                   this.parentElement.nextSibling.firstElementChild.appendChild(doc_elem);
+                   scrollDocToChapter(doc_elem, jmp_ch_array[index], 100); 
+                }
+             }
+             else {
+                var col_id = $(detail_node.firstElementChild).data("colid");
+                if (col_id === index) {
+                   detail_node.parentElement.removeChild(detail_node); 
+                   $(expand_elem).removeClass().addClass('sp-icon-expand expand');  <!-- change icon to expand -->
+                }
+                else {
+                   $(detail_node.firstElementChild).data("colid", index);
+                   $(detail_node.firstElementChild.firstElementChild).css('left', bias_array[index]);
+                   $(expand_elem).removeClass().addClass('sp-icon-expand collapse');  <!-- change icon to collapse -->
+                   var doc_elem = $(detail_node).find(".doc")[0];
+                   if (doc_elem) {
+                      scrollDocToChapter(doc_elem, jmp_ch_array[index], 100); 
+                   }
+                }
+             }
+          }
+       });
+
+       $(document).on('click', '.ch-marker', function() {
+          var chapter_name = $(this).attr('name');
+          var target_elem = undefined;
+          if ($(this).parents('.doc_detail').length > 0)  
+          {
+             var doc_detail = $(this).parents('.doc_detail')[0];
+             var doc = $(doc_detail).children('.doc')[0];
+             if (doc) {
+                var href_elem = $(doc).find("." + chapter_name).eq(0);
+                if (href_elem) {
+                   target_elem = href_elem.get(0);
+                }
+                if (target_elem) {
+                   var top = $(target_elem).position().top;
+                   top += $(doc).scrollTop();
+                   $(doc).animate({scrollTop: top}, 500);
+                }
+             }
+          }
+       });
+    });
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% include "./modules/header.html" %}
+    <div class="content">
+       <!-- <textarea id="alltext" style="display: block; width: 800px; height: 400px"></textarea> -->
+       <div class="table">
+          <div class="row" data-docid=1003>
+             <div class="cell punishment"><div class="inner_text">1年</div><span class="sp-icon-expand"></span></div>
+             <div class="cell hurt"><div class="inner_text">轻伤二级</div><span class="sp-icon-expand"></span></div>
+             <div class="cell docid"><div class="inner_text">(2015)甬余刑初字第01897号</div><span class="sp-icon-expand"></span></div>
+             <div class="cell date"><div class="inner_text">2015-05-17</div></div>
+             <div class="cell court"><div class="inner_text">新疆维吾尔自治区察布查尔锡伯自治县人民法院</div></div>
+             <div class="cell kind"><div class="inner_text">标准案例</div></div>
+          </div>
+          <div class="row" data-docid=1002>
+             <div class="cell punishment"><div class="inner_text">11个月</div><span class="sp-icon-expand"></span></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div><span class="sp-icon-expand"></span></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div><span class="sp-icon-expand"></span></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text"></div></div>
+          </div>
+          <div class="row" docid=1003>
+             <div class="cell punishment"><div class="inner_text">6个月</div><span class="sp-icon-expand"></span></div>
+             <div class="cell hurt"><div class="inner_text">重伤一级</div><span class="sp-icon-expand"></span></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第125号</div><span class="sp-icon-expand"></span></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1004>
+             <div class="cell punishment"><div class="inner_text">7个月</div><span class="sp-icon-expand"></span></div>
+             <div class="cell hurt"><div class="inner_text">重伤二级</div><span class="sp-icon-expand"></span></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第126号</div><span class="sp-icon-expand"></span></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1005>
+             <div class="cell punishment"><div class="inner_text">8个月</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1006>
+             <div class="cell punishment"><div class="inner_text">9个月</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1007>
+             <div class="cell punishment"><div class="inner_text">10个月</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1008>
+             <div class="cell punishment"><div class="inner_text">11个月</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1009>
+             <div class="cell punishment"><div class="inner_text">1年</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+          <div class="row" docid=1010>
+             <div class="cell punishment"><div class="inner_text">1年1个月</div></div>
+             <div class="cell hurt"><div class="inner_text">轻伤一级</div></div>
+             <div class="cell docid"><div class="inner_text">(2015)金婺刑初字第124号</div></div>
+             <div class="cell date"><div class="inner_text">2015-06-24</div></div>
+             <div class="cell court"><div class="inner_text">金华市婺城区人民法院</div></div>
+          </div>
+       </div>
+    </div>
+
+    <div id="10docs" style="display:none">
+        <div class="doc" data-docid=1003>
+<div class="chapter header">
+<p>瑞安市人民法院</p>
+<p>刑事判决书</p>
+<p class="docid">(2015)瑞刑初字第110号</p>
+</div>
+<div class="chapter object">
+<p>公诉机关浙江省瑞安市人民检察院。</p>
+<p>被告人李某。因涉嫌犯故意伤害罪，于2014年12月10日被取保候审。</p>
+<p>辩护人程翔龙，浙江玉海律师事务所律师。</p>
+</div>
+<div class="chapter fact">
+<p>瑞安市人民检察院以瑞检刑诉（2015）150号起诉书指控被告人李某犯故意伤害罪，于2015年1月22日向本院提起公诉。本院于同日以简易程序立案，并依法组成合议庭，于同年2月9日公开开庭审理了本案，后转为普通程序。瑞安市人民检察院指派检察员林志秋出庭支持公诉。被告人李某、辩护人程翔龙及鉴定人徐某某到庭参加诉讼。现已审理终结。</p>
+</div>
+<div class="chapter argument_process">
+<p>经审理查明，2014年4月11日6时30分许，被告人李某因接女儿上学，将二轮电动车停在瑞安市安阳街道风荷花苑一期小区大门口，堵住了驾驶三轮车的陈某，致使其不能右转，随即二人发生口角并互殴，被告人李某用拳脚殴打被害人陈某，致其倒地受伤，后被告人李某随120救护车送被害人陈某到人民医院救治，并先行支付5000元医疗费用。2014年5月6日，被告人李某与被害人陈某达成调解协议，赔偿被害人陈某25000元，并得到其谅解。后被害人陈某因伤势复发再次住院治疗，并要求司法鉴定。经鉴定，被害人陈某主要损伤为右顶部头皮肿胀，右顶部少许蛛网膜下腔出血，左侧慢性硬膜下血肿（伤后未出现相应脑受压症状和体征，并已行钻孔引流之术），其损伤程度属轻伤一级。</p>
+<p>案发后，被告人李某主动到安阳派出所投案，并如实交代犯罪事实。</p>
+<p>在本案审理过程中，被告人李某和被害人陈某达成调解协议，赔偿其经济损失共计人民币18万元（包括之前已支付的3万元）。</p>
+<p>上述事实，被告人李某在法庭审理过程中亦无异议，并有被害人陈某的陈述，证人胡某的证言，监控录像，温州医科大学司法鉴定中心司法鉴定意见书，法医学人体损伤程度鉴定书，调解协议书，票据，领款凭证，到案情况说明，人口信息等证据证实，足以认定。</p>
+</div>
+<div class="chapter court_conclusion">
+<p>本院认为，被告人李某故意伤害他人身体，致一人轻伤，其行为已触犯刑律，构成故意伤害罪。公诉机关指控的罪名成立。被告人李某能自首，依法可从轻处罚；事发后积极将被害人送医治疗，且已赔偿被害人经济损失，双方达成调解协议，可酌情从轻处罚，结合社区矫正审前社会调查意见，可对其适用缓刑。为严明国法，惩罚犯罪，保护公民人身权利不受侵犯，根据被告人犯罪的事实、性质、情节和对于社会的危害程度，依照《中华人民共和国刑法》第二百三十四条第一款、第六十七条第一款、第七十二条第一款之规定，判决如下：</p>
+</div>
+<div class="chapter sentence">
+<p>被告人李某犯故意伤害罪，判处有期徒刑八个月，缓刑一年。</p>
+<p>（缓刑考验期限从判决确定之日起计算）。</p>
+</div>
+<div class="chapter disagreement">
+<p>如不服本判决，可在接到判决书的第二日起十日内，通过本院或直接向浙江省温州市中级人民法院提出上诉。书面上诉的，应交上诉状正本一份，副本二份。</p>
+</div>
+<div class="chapter footer">
+<p>审　判　长　　李延锁</p>
+<p>人民陪审员　　黄秀华</p>
+<p>人民陪审员　　杨协敏</p>
+<p>二〇一五年六月四日</p>
+<p>书　记　员　　陈杨杰</p>
+</div>
+</div>
+        <div class="doc" data-docid=1002>
+<br>
+<br>
+<div class="chapter object">
+公诉机关浙江省瑞安市人民检察院。<br>
+被告人李某。因涉嫌犯故意伤害罪，于2014年12月10日被取保候审。<br>
+辩护人程翔龙，浙江玉海律师事务所律师。<br>
+</div>
+<div class="chapter fact">
+瑞安市人民检察院以瑞检刑诉（2015）150号起诉书指控被告人李某犯故意伤害罪，于2015年1月22日向本院提起公诉。本院于同日以简易程序立案，并依法组成合议庭，于同年2月9日公开开庭审理了本案，后转为普通程序。瑞安市人民检察院指派检察员林志秋出庭支持公诉。被告人李某、辩护人程翔龙及鉴定人徐某某到庭参加诉讼。现已审理终结。<br>
+</div>
+<span class="chapter argument_process">
+经审理查明，2014年4月11日6时30分许，被告人李某因接女儿上学，将二轮电动车停在瑞安市安阳街道风荷花苑一期小区大门口，堵住了驾驶三轮车的陈某，致使其不能右转，随即二人发生口角并互殴，被告人李某用拳脚殴打被害人陈某，致其倒地受伤，后被告人李某随120救护车送被害人陈某到人民医院救治，并先行支付5000元医疗费用。2014年5月6日，被告人李某与被害人陈某达成调解协议，赔偿被害人陈某25000元，并得到其谅解。后被害人陈某因伤势复发再次住院治疗，并要求司法鉴定。经鉴定，被害人陈某主要损伤为右顶部头皮肿胀，右顶部少许蛛网膜下腔出血，左侧慢性硬膜下血肿（伤后未出现相应脑受压症状和体征，并已行钻孔引流之术），其损伤程度属轻伤一级。<br>
+案发后，被告人李某主动到安阳派出所投案，并如实交代犯罪事实。<br>
+在本案审理过程中，被告人李某和被害人陈某达成调解协议，赔偿其经济损失共计人民币18万元（包括之前已支付的3万元）。<br>
+上述事实，被告人李某在法庭审理过程中亦无异议，并有被害人陈某的陈述，证人胡某的证言，监控录像，温州医科大学司法鉴定中心司法鉴定意见书，法医学人体损伤程度鉴定书，调解协议书，票据，领款凭证，到案情况说明，人口信息等证据证实，足以认定。<br>
+</span>
+<div class="chapter court_conclusion">
+本院认为，被告人李某故意伤害他人身体，致一人轻伤，其行为已触犯刑律，构成故意伤害罪。公诉机关指控的罪名成立。被告人李某能自首，依法可从轻处罚；事发后积极将被害人送医治疗，且已赔偿被害人经济损失，双方达成调解协议，可酌情从轻处罚，结合社区矫正审前社会调查意见，可对其适用缓刑。为严明国法，惩罚犯罪，保护公民人身权利不受侵犯，根据被告人犯罪的事实、性质、情节和对于社会的危害程度，依照《中华人民共和国刑法》第二百三十四条第一款、第六十七条第一款、第七十二条第一款之规定，判决如下：<br>
+</div>
+<div class="chapter sentence">
+被告人李某犯故意伤害罪，判处有期徒刑八个月，缓刑一年。<br>
+（缓刑考验期限从判决确定之日起计算）。<br>
+</div>
+<div class="chapter disagreement">
+如不服本判决，可在接到判决书的第二日起十日内，通过本院或直接向浙江省温州市中级人民法院提出上诉。书面上诉的，应交上诉状正本一份，副本二份。<br>
+</div>
+<span class="chapter footer">
+审　判　长　　李延锁<br>
+人民陪审员　　黄秀华<br>
+人民陪审员　　杨协敏<br>
+二〇一五年六月四日<br>
+书　记　员　　陈杨杰<br>
+        </span>
+</div>
+        <div class="doc" data-docid=1001>
+<div class="head">
+浙江省绍兴市越城区人民法院
+
+刑 事 判 决 书
+
+（2011）绍越刑初字第842号
+</div>
+<div class="object">
+
+公诉机关绍兴市越城区人民检察院。
+
+被告人周某。2009年8月24日因犯寻衅滋事罪被浙江省绍兴县人民法院判处有期徒刑一年六个月，缓刑二年。因涉嫌犯非法拘禁罪于2011年9月14日被绍兴市公安局越城区分局刑事拘留，同年10月21日被逮捕。现羁押于绍兴市看守所。
+
+辩护人程幸福、姚波。
+
+</div>
+<div class="fact">
+绍兴市越城区人民检察院以绍越检刑诉（2011）782号起诉书指控被告人周某犯非法拘禁罪，于2011年11月15日向本院提起公诉。本院于同日立案受理，并依法适用简易程序，实行独任审判，公开开庭审理了本案。绍兴市越城区人民检察院不派员出庭支持公诉，被告人周某及其辩护人姚波到庭参加了诉讼。现已审理终结。
+
+</div>
+<div class="argument_process">
+绍兴市越城区人民检察院指控，2011年2月16日下午3时许，张海江（已判决）因被害人陈某乙欠钱未还，指使钱坚强、陈关江（均已判决）、“辣子”（另案处理），并由“辣子”纠集被告人周某等人，在绍兴市越城区鉴湖镇秦望村施家桥一棋牌室将被害人陈某乙强行开车带至绍兴市区城南玉兰大厦三楼一办公室、秦望大酒店、正风温泉等地进行看管，逼其还债，并在此期间对被害人陈某乙实施殴打。直至2月17日晚8时许，因被害人家属报警，被害人陈某乙在玉兰大厦三楼一办公室内获救。经鉴定，被害人陈某乙左上臂皮肤4㎝×4㎝青紫，压痛，其伤势未达轻伤程度。
+
+2011年9月13日晚，被告人周某在绍兴市区城南温馨花园小区内被公安机关抓获。
+
+上述事实，被告人周某在开庭审理过程中亦无异议，并有被害人陈某乙的陈述及辨认笔录，证人陈某甲的证言，非同案共犯张海江、钱坚强、陈关江的供述，损伤检验证明书及被害人伤势照片，抓获经过说明，户籍证明，本院（2011）绍越刑初字第581号刑事判决书等证据证实，足以认定。
+
+另，浙江省绍兴县人民法院（2009）绍刑初字第741号刑事判决书及刑事案件执行通知书，证实被告人周某曾因犯寻衅滋事罪于2009年8月24日被浙江省绍兴县人民法院判处有期徒刑一年六个月，缓刑二年，缓刑考验期限自2009年9月8日起至2011年9月7日止，并曾因该案于2009年6月8日被刑事拘留，同月10日被取保候审。
+
+</div>
+<div class="court_conclusion">
+本院认为，被告人周某受人纠集后，为索取债务，伙同他人采用拘禁的方法非法剥夺他人人身自由，具有殴打情节，其行为已构成非法拘禁罪，且系共同犯罪。公诉机关指控的罪名成立，本院予以支持。被告人周某在缓刑考验期限内犯新罪，应当撤销缓刑并依法数罪并罚。本案被告人周某等人对被害人实施非法拘禁过程中有殴打行为，应依法从重处罚。被告人周某能自愿认罪，可酌情从轻处罚。公诉机关提出的量刑建议，被告人周某及其辩护人请求对其从轻处罚的辩护意见，本院均予以采纳。依照《中华人民共和国刑法》第二百三十八条第一、三款、第二十五条第一款、第七十七条第一款、第六十九条之规定，判决如下：
+
+</div>
+<div class="judgement">
+被告人周某犯非法拘禁罪，判处拘役六个月；连同其前犯寻衅滋事罪所判处的有期徒刑一年六个月，决定执行有期徒刑一年十个月（刑期从判决执行之日起计算。判决执行以前先行羁押的，羁押一日折抵刑期一日，即自二0一一年九月十三日起至二0一三年七月十日止）。
+
+</div>
+<div class="disagreement">
+如不服本判决，可在接到判决书的第二日起十日内，通过本院或者直接向浙江省绍兴市中级人民法院提出上诉。书面上诉的，应当提交上诉状正本一份，副本二份。
+
+</div>
+<div class="footer">
+审判员　　傅莹莹
+
+二〇一一年十一月二十一日
+
+书记员    朱 菡
+</div>
+<div class="attachment">
+
+附录：
+
+《中华人民共和国刑法》
+
+第二百三十八条非法拘禁他人或者以其他方法非法剥夺他人人身自由的，处三年以下有期徒刑、拘役、管制或者剥夺政治权利。具有殴打、侮辱情节的，从重处罚。
+
+犯前款罪，致人重伤的，处三年以上十年以下有期徒刑；致人死亡的，处十年以上有期徒刑。使用暴力致人伤残、死亡的，依照本法第二百三十四条、第二百三十二条的规定定罪处罚。
+
+为索取债务非法扣押、拘禁他人的，依照前两款的规定处罚。
+
+国家机关工作人员利用职权犯前三款罪的，依照前三款的规定从重处罚。
+
+第二十五条共同犯罪是指二人以上共同故意犯罪。
+
+二人以上共同过失犯罪，不以共同犯罪论处；应当负刑事责任的，按照他们所犯的罪分别处罚。
+
+第七十七条被宣告缓刑的犯罪分子，在缓刑考验期限内犯新罪或者发现判决宣告以前还有其他罪没有判决的，应当撤销缓刑，对新犯的罪或者新发现的罪作出判决，把前罪和后罪所判处的刑罚，依照本法第六十九条的规定，决定执行的刑罚。
+
+被宣告缓刑的犯罪分子，在缓刑考验期限内，违反法律、行政法规或者国务院有关部门关于缓刑的监督管理规定，或者违反人民法院判决中的禁止令，情节严重的，应当撤销缓刑，执行原判刑罚。
+
+第六十九条判决宣告以前一人犯数罪的，除判处死刑和无期徒刑的以外，应当在总和刑期以下、数刑中最高刑期以上，酌情决定执行的刑期，但是管制最高不能超过三年，拘役最高不能超过一年，有期徒刑最高不能超过二十年。
+
+如果数罪中有判处附加刑的，附加刑仍须执行。
+</div>
+        </div>
+    </div>
+    {% include "./modules/footer.html" %}
+{% endblock %}

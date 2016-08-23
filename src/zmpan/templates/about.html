@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block title %}网站信息{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/stylesheets/about.css">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+   <div class="section questions">
+     <h1><a name="question">问题</a></h1>
+     <p><span class="intro">网站介绍</span>此网站是刑事初审判罚预测分析功能的一小部分功能展示。期望的刑事初审判罚预测分析功能：用户输入一个初审刑事判决书，提取文档中的从轻从重量刑情节(从轻的如: 未成年人、自首、从犯；从重的如: 之前做过牢；此部分功能已经完成，准确率可以达到应用)，以及其他的量刑因素(如涉案金额，故意伤害罪的伤害情节)；从海量的裁判文书库(目前有160万个刑事裁判文书)找到类似的文书集合、模型分析、并给出一组(比如10个)判罚规范的文书，供用户参考输入的文书判罚是否相对合理。 该网站目前仅仅演示: 从轻从重量刑情节雷同的一组文书库，使用的文档库为2015年5月之前，中国裁判文书网开放的浙江省的刑事部分。</p>
+     <ul>
+        <li><span class="intro">目标:</span>刑事初审判罚预测分析。</li>
+        <li><span class="intro">应用:</span>用户输入一个初审刑事判决书，输出一组判罚标准的初审刑事判决书供用户参考。</li>
+        <li><span class="intro">难点1:</span>自然语言处理技术的识别准确度，比如涉案金额的提取。</li>
+        <li><span class="intro">难点2:</span>识别标准判罚，和匹配算法模型。需要较好地进行数学建模。</li>
+        <li><span class="intro">动力1:</span>裁判文书用词规范、严谨，所述内容主题严格限定，nlp技术乐观估计可以达到应用级别。</li>
+        <li><span class="intro">动力2:</span>即便难以达到较高的预测分析水平，也可以提供更严谨的语义搜索。</li>
+        <li><span class="intro">动力3:</span>相关技术的积累和学习。</li>
+        <li><span class="intro">风险:</span>(1)市场是否接受和认可 (2)如何维持保本经营 (3)如何推广</li>
+     </ul>
+     <p><span class="intro">技术实现:</span> perl实现爬虫，以及清洗数据，实现切块、被告信息、判罚信息、以及量刑情节的提取。(主要针对文本处理，利用perl强大的内置正则功能)</p>
+     <p>mysql存储被告、判罚、量刑情节等信息，以及文档的路径。目前采用文件目录的形式存储所有的判决书(和老版本的裁判文书库目录一一对应)。</p>
+     <p><span class="intro">c++模块实现计算:</span>量刑情节的分组。计算结果使用redis作为cache，使用thrift rpc调用和web程序通信。gcc版本: 4.8.2，用到了c++0x</p>
+     <p><span class="intro">web应用的构建:</span>node.js/express/js/html/css/swig/less，部分移植了bootstrap字体。swig/less作为html和css模板语言，便于模块化和管理。</p>
+     <p><span class="intro">测试实现:</span> 功能块如文本信息的提取，通过bash/perl构建regression框架，写了几百个测试例子。c++计算模块，目前主要通过code review，可以考虑引入gcov。</p>
+     <p><span class="intro">产品构建:</span>网站原型通过axure构建，符合自己期望的结果，再实现切图和功能。制作原型三要素：颜色理论，排版，交互(UI)；前两者很菜，投入时间很少。</p>
+     <p><span class="intro">技术栈:</span>axure/linux/perl/regexp/bash/c++/mysql/redis/thrift/node.js/javascript/html/css/swig/less/git</p>
+     <p><span class="intro">心得:</span>自己学习能力还不错，codecademy上跟着学了html/css教程，学会了切图，遇到问题再钻研。node.js/express也是从一个人看tutorial、查资料，遇到问题摸索出来。</p>
+     <p>          git自学了一个礼拜，然后就在github和bitbucket上演练和实际应用。redis花一个礼拜时间学习和应用相关的问题。thrift时间多一些，花了一个多礼拜琢磨，对c++版本要求高，依赖的比如boost库、libevent、bison，centos版本都比较旧，安装就折腾了3天。至于网站开发中遇到的问题，有些上水木交流，有些通过google和stackoverflow解决问题。javascript对象模型的理解，水木上技术大牛的一段话综述就表达的清清楚楚，没花太多时间就走出困惑。 axure，乃至网站图标矢量图都是查相关资料摸索出来的。</p>
+     <p>          由于是web方面的新手，web应用的差不多每行代码都是敲出来的。据说有牛人72小时编程，3天就能做出一个网站来，╮(╯_╰)╭</p>
+     <p><span class="intro">总结:</span>做这个<a href="www.zmpan.com">网站</a>的过程中，经常一阵子写html/css，要中断掉写js；刚学热了js，又要切换到c++服务器端计算模块；不同任务来回切换，css/js基础不稳，前面明白了、几个月后模糊又得重新看。</p>
+   </div>
+   
+   <div class="section progress">
+     <h1><a name="progress">进度</a></h1>
+     <ul class="done-lst">
+        <li><i>2014.09 - 2015.02</i>: 参与浙江省裁判文书大数据分析的项目开发，切块、量刑情节提取等功能的程序开发。</li>
+        <li><i>2015.03 - 2015.05</i>: 编写爬虫爬取中国裁判文书网的所有刑事裁判文书，数据清洗以便将html文档生成文本文件。</li>
+        <li><i>2015.06 - 2015.08</i>: 实现被告信息、判罚信息的提取，优化识别的准确率。完善切块、量刑情节识别程序在开放文书库上的识别准确率。</li>
+        <li><i>2015.09 - 2015.12</i>: 学习node.js, js, html/css相关技术</li>
+        <li><i>2016.03 - 2016.08</i>: 完成zmpan.com网站的基本功能，实现量刑情节分组功能的演示</li>
+     </ul>
+     <ul class="todo-lst">
+        <li>编写新的爬虫(裁判文书网改版): 4周时间</li>
+        <li>文档数据的统一管理，先前是目录结构，现在考虑用mongoDB: 2周时间</li>
+        <li>文档日期、法院名、案号的提取: 1周时间</li>
+        <li class="summary">以上一个月内可以完成</li>
+        <li>提取故意伤害罪的伤害情节: 1个月时间</li>
+        <li>建立和完善法律词库</li>
+        <li><p>学习自然语言处理技术，尤其分词、词性标注、文法结构的提取: 2个月时间。</p>
+            学习和研究<a href="http://bosonnlp.com/">玻森</a>的自然语言处理应用，识别准确率。</br>
+            学习和研究<a href="https://www.qcloud.com/product/nlp.html">腾讯文智</a>的自然语言处理应用，识别准确率。</br>
+            学习和研究哈工大的自然语言处理框架，识别准确里。</br>
+            学习和研究清华大学的<a href="http://thulac.thunlp.org/">自然语言处理框架</a>，识别准确率。 </br>
+            学习和研究standford parser相关技术。 </br>
+        </li>
+        <li>自然语言处理技术的选型、剪裁、以及在提取涉案金额上的应用: 3个月时间。</li>
+        <li class="summary">以上估计半年内可以完成</li>
+        <li>增加量刑情节、伤害情节的置信度分析: 3周</li>
+        <li>同组量刑情节的判罚分类器: 4周</li>
+        <li>比对算法模型的设计、实现和初步优化: 3个月</li>
+        <li class="summary">以上估计4个月时间可以完成</li>
+        <li>产品v1.0版本: 网站功能上线: 3个月</li>
+        <li class="summary">预计推出初步产品需要14个月人力时间。</li>
+        <li>当前预算之外的更远目标，android/ios手机端功能，乃至和第三方应用的结合等: 未知数。</li>
+     </ul>
+   </div>
+   <div class="section aboutus">
+   <h1><a name="aboutus">关于我们</a></h1>
+   <p>刘建，网站和刑事判罚预测分析功能的发起者，目前一个人在从事这方面的工作。希望有志同道合者，研究相关技术的开发</p>
+   <p>联系方式：<span class="email">eligere.lau@gmail.com</span></p>
+   </div>
+</div>
+{% endblock %}
+
+

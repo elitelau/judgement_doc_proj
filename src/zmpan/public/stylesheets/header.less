@@ -1,0 +1,94 @@
+@import "unistyle.less";
+
+@header-elem-gap: 75px;
+@header-color: #F1F1F1;
+
+.set-header(@left-margin) {
+   body>.header {
+      display: block;
+      width: 100%;
+      height: @result-header-height;
+      background-color: @header-color;
+      .header-primary {
+         width: @result-header-height + @header-elem-gap + @inp-search-index-width + @btn-submit-result-width + 1px * 3;
+         float: left;
+         margin-left: @left-margin;
+         img {
+            display: block;
+            width: @result-header-height;
+            height: @result-header-height;
+            float: left;
+            margin-right: @header-elem-gap;
+            background-color: #f1f1f1;
+         }
+         form fieldset {
+            border-top: 1px dashed red;
+            border-bottom: 1px dashed red;
+            float: left;
+            margin-top: 16px;
+            .query-wrapper {
+               display: block;
+               width: @inp-search-index-width + @btn-submit-result-width + 1px;
+               .item {
+                  display: block;
+                  float: left;
+                  border: none;
+               }
+               
+               .item-query {
+                  .input-query {
+                      .inp-query-index;
+                  }
+                  .input-query:focus {
+                      border: 1px solid @input-border-focus-color;
+                  }
+               }
+              
+               .item-submit {
+                  position: relative;
+                  min-width: @btn-submit-result-width;
+                  height: @search-index-height;
+                  .query-btn {
+                      .unified-btn-style;
+                      .btn-query-style(@search-index-height, @search-index-height, @submit-index-font-size);
+                  }
+                  .query-btn:hover,
+                  .query-btn:focus,
+                  .query-btn:active
+                  {
+                      .unified-btn-focus-style;
+                  }
+
+                  .sp-icon-search {
+                     font-family: 'Glyphicons Halflings';
+                     font-style: normal;
+                     font-weight: normal;
+                     font-size: 16px;
+                     color: white;
+                     line-height: 1;
+                     -webkit-font-smoothing: antialiased;
+                     -moz-osx-font-smoothing: grayscale;
+                     z-index: 1;
+                  }
+                  .sp-icon-search:before {
+                     content: "\e003";
+                  }
+
+                  .query-btn, .sp-icon-search {
+                     width: @btn-submit-result-width;
+                     height: @search-index-height;
+                     position: absolute;
+                     left: 0;
+                     top: 0;
+                     text-align: center;
+                     line-height: @search-index-height;
+                  }
+               }
+            }
+            .float_clear(query-wrapper, ~'.');
+            border: none;
+         }
+      }
+   }
+}
+
