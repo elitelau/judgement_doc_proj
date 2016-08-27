@@ -4,7 +4,7 @@ var pgr = new Paginator(40, 1000);
 for (var i = 1; i <= 13; ++i) {
    for (var j = 1; j <= i; ++j) {
       pgr.set_param(j, i);
-      pgr.build();
+      pgr.build({crime: "盗窃罪"});
    }
    console.log("");
 }

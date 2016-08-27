@@ -1,7 +1,8 @@
 var thrift = require('thrift');
 var Paginator = require('./paginator.js');
+var url = require('url');
 
-exports.group = function(res, thrift_client, qry_str, page_no) {
+exports.group = function(req, res, thrift_client, qry_str, page_no) {
    thrift_client.group_scenarios(qry_str, page_no, 40,  function(err, response) {
       if (err) {
          console.log(err);
@@ -20,7 +21,10 @@ exports.group = function(res, thrift_client, qry_str, page_no) {
        
          var pgr = new Paginator(page_no, total_page);
          var html_code = pgr.build({dir: 'search', params: [{key: 'q', value:qry_str}]});
-         res.render('search', {is_null_content: is_empty, crime: qry_str, group_list: group_list, paginator_html: html_code});
+         var hostname = req.protocol + '://' + req.get('host');
+         res.render('search', {is_null_content: is_empty, crime: qry_str, 
+                               group_list: group_list, paginator_html: html_code,
+                               hostname: hostname});
       }
    });
 }
@@ -101,7 +105,10 @@ exports.retrieve_docs = function(req, res, thrift_client, crime, data1, data2, p
                                                             {key: 'd1', value: data1}, 
                                                             {key: 'd2', value: data2}]
                                       });
-            res.render('docs', {is_null_content: doc_list.length === 0, doc_list: doc_list, paginator_html: html_code});
+
+            var hostname = req.protocol + '://' + req.get('host');
+            res.render('docs', {is_null_content: doc_list.length === 0, 
+                                doc_list: doc_list, paginator_html: html_code, hostname: hostname});
          }
       }
    });

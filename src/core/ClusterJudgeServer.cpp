@@ -137,7 +137,7 @@ static std::map<int, std::map<int, std::string> > code_to_scenario_map = {
 
 static std::string  g_log_file;
 pthread_mutex_t     g_mutex_log;
-static std::string  g_doc_path_prefix = "/extra/segment/";
+static std::string  g_doc_path_prefix = "/root/extra/segment/";
 
 static int do_mkdir(const char *path, mode_t mode)
 {
@@ -729,7 +729,7 @@ public:
          mysql_options(m_conn, MYSQL_SET_CHARSET_NAME, "utf8");
          mysql_options(m_conn, MYSQL_OPT_RECONNECT, &reconnect);
          
-         if (mysql_real_connect(m_conn, "127.0.0.1", "mysql", "123456",
+         if (mysql_real_connect(m_conn, "127.0.0.1", "mysql", "axfdyhhi",
                                  "judgement", 0, NULL, 0) == NULL)
          {
             mysql_close(m_conn);

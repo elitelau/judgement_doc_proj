@@ -70,8 +70,8 @@ app.get('/error', function(req, res) {
 });
 
 app.get('/doc/:docid', function(req, res) {
-   console.log("docid=" + req.params.docid);
-   res.render('doc');
+   console.log("hostname=" + req.get('host'));
+   res.render('doc', { hostname: req.protocol + '://' + req.get('host') });
 });
 
 app.get('/abc', routes.test);
@@ -108,7 +108,7 @@ app.post('/search', function(req, res) {
       if (req.body.page_no) {
          page_no = parseInt(req.body.page_no);
       }
-      group.group(res, thrift_client, qry_str, page_no);
+      group.group(req, res, thrift_client, qry_str, page_no);
    }
    else {
       req.session.title = "错误提示";
