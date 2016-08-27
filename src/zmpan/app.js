@@ -70,7 +70,6 @@ app.get('/error', function(req, res) {
 });
 
 app.get('/doc/:docid', function(req, res) {
-   console.log("hostname=" + req.get('host'));
    res.render('doc', { hostname: req.protocol + '://' + req.get('host') });
 });
 

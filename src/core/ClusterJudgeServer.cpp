@@ -187,7 +187,7 @@ void set_log_file_name(void) {
    time (&rawtime);
    timeinfo = localtime (&rawtime);
 
-   strftime (buffer,100,"logs/%Y-%m-%d_%H%M%S.download.log",timeinfo);
+   strftime (buffer,100,"logs/%Y-%m-%d_%H%M%S.thrift.log",timeinfo);
    g_log_file = buffer;
 
    do_mkdir("logs", 0777);
@@ -861,7 +861,7 @@ public:
             doc_ids_str += ", " + std::to_string(docids_within_page[i]);
          }
 
-         std::string stmt = "select b.doc_id, b.name, b.is_org, b.penalty, b.duration, b.probation, b.fine,"
+         std::string stmt = "select b.doc_id, b.name, b.is_org, b.penalty, b.duration, b.probation, b.fine, b.court, b.docname, b.recorddate,"
                             "  CONCAT('" + g_doc_path_prefix + "', REPLACE(CONCAT_WS('/', court.href, b.type, b.href),"
                             " '.htm', '.txt')) from (select * from "
                             "(select doc_id, name, is_org, penalty, max(duration) as duration, probation, fine from"
@@ -921,7 +921,7 @@ public:
                   s.__set_fine(strtod(row[6], NULL));
                }
 
-               std::ifstream t(row[7]);
+               std::ifstream t(row[10]);
                std::stringstream buffer;
                buffer << t.rdbuf();
 
@@ -929,9 +929,9 @@ public:
                doc.__set_docid(docid);
                doc.__set_sentences(sentence_lst);
                doc.__set_injury(1 << 31);
-               doc.__set_name("UNKN");
-               doc.__set_date("0000-00-00");
-               doc.__set_court_name("UNKN");
+               doc.__set_name(row[8] ? row[8]: "UNKN");
+               doc.__set_date(row[9] ? row[9] : "0000-00-00");
+               doc.__set_court_name(row[7] ? row[7]: "UNKN");
                doc.__set_kind(0);
                doc.__set_full_text(buffer.str());
                _return.page_data.push_back(doc);

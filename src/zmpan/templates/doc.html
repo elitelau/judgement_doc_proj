@@ -5,10 +5,26 @@
 <link rel="stylesheet" href="/stylesheets/doc.css">
 <script src="/javascript/jquery-2.2.2.min.js" charset="utf-8"></script>
 <script type="text/javascript">
+    var doc_inner_html;
+    var docid;
     function init(inner_html) {
        document.getElementById('content').innerHTML = inner_html;
+       var cur_stat = history.state;
+       if (cur_stat === undefined) {
+          var stateObj = {doc: doc_inner_html};
+          history.replaceState(stateObj, '文书正文', '/doc/' + docid);
+          console.log("change history state");
+       }
     }
-       
+      
+    window.onpopstate = function(event) {
+       console.log("onpopstate event trigers");
+       var stateObj = history.state;
+       if (stateObj) {
+          document.getElementById('content').innerHTML = stateObj.doc;
+       }
+    };
+
     $(document).ready(function(){
        $(document).on('click', '.ch-marker', function() {
           var chapter_name = $(this).attr('name');

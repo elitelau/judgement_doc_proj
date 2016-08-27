@@ -66,6 +66,8 @@
              inner_html = '<div class="doc-wrapper">' + "\n" + doc_html + '\n' + ch_marker_wrapper_html + "\n</div>";
           }
           w.onload = function() {
+             w.doc_inner_html = inner_html;
+             w.docid = docid;
              w.init(inner_html);
           }
        });
